@@ -9,22 +9,22 @@
 import UIKit
 
 class ToDoListViewController: UITableViewController {
-
-    let itemArray = [
-    "Find Mike",
-    "Buy Eggos",
-    "Destroy Demogorgon"
+    
+    var itemArray = [
+        "Find Mike",
+        "Buy Eggos",
+        "Destroy Demogorgon"
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
@@ -46,5 +46,33 @@ class ToDoListViewController: UITableViewController {
         
         
     }
+    
+    //MARK:- Add New Items
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add new Todoey Item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //what will happen when user clicks add itme button on the alert
+            if textField.text != "" {
+                self.itemArray.append(textField.text!)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        alert.addTextField { alertTextField in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+            
+        }
+        alert.addAction(action)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
 }
 

@@ -10,41 +10,41 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    var itemArray = [
-        "Find Mike",
-        "Buy Eggos",
-        "Destroy Demogorgon"
-    ]
+    var itemArray:[Item] = []
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
+        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel!.text = itemArray[indexPath.row]
+        cell.textLabel!.text = itemArray[indexPath.row].task
         return cell
     }
     
     //MARK:- TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row])
+        
         tableView.deselectRow(at: indexPath, animated: true)
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
+        
+        itemArray[indexPath.row].isDone.toggle()
+        
+        if (itemArray[indexPath.row].isDone) {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
         }
-        
-        
     }
     
     //MARK:- Add New Items
@@ -58,7 +58,7 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             //what will happen when user clicks add itme button on the alert
             if textField.text != "" {
-                self.itemArray.append(textField.text!)
+                self.itemArray.append(Item(task: textField.text!))
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }

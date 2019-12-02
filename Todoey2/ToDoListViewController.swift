@@ -11,12 +11,14 @@ import UIKit
 class ToDoListViewController: UITableViewController {
     
     var itemArray:[Item] = []
-    
-    
-    
+    let encoder = PropertyListEncoder()
+    let decoder = PropertyListDecoder()
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Todoey.plist")
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        loadToDos()
         
     }
     
@@ -27,8 +29,8 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        
         cell.textLabel!.text = itemArray[indexPath.row].task
+        cell.accessoryType = itemArray[indexPath.row].isDone ? .checkmark : .none
         return cell
     }
     
@@ -45,6 +47,7 @@ class ToDoListViewController: UITableViewController {
         } else {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         }
+        self.saveToDos()
     }
     
     //MARK:- Add New Items
@@ -62,7 +65,9 @@ class ToDoListViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
+                self.saveToDos()
             }
+
         }
         alert.addTextField { alertTextField in
             alertTextField.placeholder = "Create new item"
@@ -73,6 +78,28 @@ class ToDoListViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+
+    //MARK: - Model manipulation methods
+    
+    func saveToDos() {
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Data not saved")
+        }
+    }
+
+    func loadToDos() {
+        do {
+            let data = try Data(contentsOf: dataFilePath!)
+            itemArray = try decoder.decode([Item].self, from: data)
+        } catch {
+            print("Broken load")
+            
+        }
+        
+    }
+
     
 }
-

@@ -101,6 +101,7 @@ class CategoryViewController: UITableViewController {
         }
     }
     
+    //load from CoreData
     func loadCategories(with request: NSFetchRequest<Category> = Category.fetchRequest()) {
         do {
             let result = try context.fetch(request)

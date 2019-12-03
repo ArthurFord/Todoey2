@@ -16,22 +16,17 @@ class ToDoListViewController: UITableViewController {
     
     var selectedCategory: Category? {
         didSet {
-            
             loadToDos()
-            
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
-        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
-        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -130,7 +125,6 @@ extension ToDoListViewController: UISearchBarDelegate {
         request.sortDescriptors = [NSSortDescriptor(key: "task", ascending: true)]
         
         loadToDos(with: request, predicate: predicate)
-        
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -139,7 +133,6 @@ extension ToDoListViewController: UISearchBarDelegate {
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
-            
         }
     }
 }
